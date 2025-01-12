@@ -3,6 +3,7 @@ const socket = require("socket.io");
 const http = require("http");
 const { Chess } = require("chess.js");
 const path = require("path");
+const { disconnect } = require("process");
 
 const app = express();
 const server = http.createServer(app);
@@ -23,9 +24,10 @@ app.get("/", (req, res) => {
 io.on("connection", function(uniquesocket){
     console.log("connected");
 
-    uniquesocket.on("churan", function(){
-        io.emit("paan chaapdi")
-    });
+    if(!players.white){
+        players.white = uniquesocket.id;
+    }
+
 });
 
 server.listen(3000, function(){
