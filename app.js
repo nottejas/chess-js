@@ -35,12 +35,28 @@ io.on("connection", function(uniquesocket){
         uniquesocket.emit("spectatorRole")
     }
 
-    socket.on("disconnect", function(){
+    uniquesocket.on("disconnect", function(){
         if(uniquesocket.id == players.white){
             delete players.white
         }
         else if(uniquesocket.id == players.black){
             delete players.black
+        }
+    });
+
+    uniquesocket.on("move", (move) => {
+        try {
+            if(chess.turn() === 'w' && uniquesocket.id !== players.white) return;
+            if(chess.turn() === 'b' && uniquesocket.id !== players.black) return;
+
+            const result = chess.move(move);
+            if(result){
+                currentPlayer = chess.turn();
+                io.emit("move", move);
+                io.emit("boardState", )
+            }
+        } catch(err){
+
         }
     })
 });
